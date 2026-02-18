@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche Multi-Caméras - ASECNA Stock IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --asecna-blue: #0A327D;
+            --asecna-gold: #F0B429;
+            --bg-dark: #0F172A;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #E2E8F0;
+        }
+
+        .font-outfit {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        .asecna-gradient {
+            background: linear-gradient(135deg, var(--asecna-blue), #2A5298);
+        }
+
+        .search-input:focus+.search-icon {
+            color: var(--asecna-gold);
+        }
+    </style>
+</head>
+
+<body class="h-screen flex overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-64 glass-panel m-4 flex flex-col shadow-2xl z-20">
+        <div class="p-6 flex items-center gap-3">
+            <div class="w-10 h-10 asecna-gradient rounded-xl flex items-center justify-center shadow-lg">
+                <i class="fas fa-boxes-stacked text-white text-xl"></i>
+            </div>
+            <div>
+                <h1 class="font-outfit font-bold text-xl tracking-tight text-white">Stock<span
+                        class="text-yellow-500">IA</span></h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">ASECNA Dakar</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 py-4 space-y-1">
+            <a href="monitoring.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-chart-pie w-5"></i>
+                <span class="font-medium">Tableau de bord</span>
+            </a>
+            <a href="inventory.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-box w-5"></i>
+                <span class="font-medium">Inventaire</span>
+            </a>
+            <a href="surveillance.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-video w-5"></i>
+                <span class="font-medium">Surveillance Live</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Fonctions
+                Avancées</div>
+            <a href="search.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white bg-blue-600 shadow-lg active">
+                <i class="fas fa-search w-5 text-yellow-500"></i>
+                <span class="font-medium">Recherche Multi-Cam</span>
+            </a>
+            <a href="validation.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-check-double w-5"></i>
+                <span class="font-medium">Validations IA</span>
+            </a>
+            <a href="config.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-cog w-5"></i>
+                <span class="font-medium">Configuration</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-800">
+            <button onclick="window.history.back()"
+                class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all">
+                <i class="fas fa-arrow-left"></i>
+                Retour
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto p-8">
+        <header class="mb-10 text-center max-w-2xl mx-auto">
+            <h2 class="text-4xl font-outfit font-bold text-white mb-4">Recherche Globale d'Objets</h2>
+            <p class="text-slate-400 mb-8">Localisez instantanément n'importe quel matériel sur l'ensemble du réseau de
+                caméras ASECNA.</p>
+
+            <div class="relative group">
+                <input type="text" id="search-query" placeholder="Ex: Souris, Clavier, Perceuse..."
+                    class="w-full bg-slate-800/50 border-2 border-slate-700 rounded-2xl px-14 py-5 text-lg text-white focus:outline-none focus:border-blue-500 transition-all shadow-2xl search-input">
+                <i
+                    class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 text-xl search-icon transition-colors"></i>
+                <button id="search-btn"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold transition-all active:scale-95 shadow-lg">
+                    Rechercher
+                </button>
+            </div>
+        </header>
+
+        <!-- Search Results -->
+        <div id="results-count" class="mb-6 text-slate-400 hidden">
+            <span id="count-num" class="text-white font-bold">0</span> résultat(s) trouvé(s)
+        </div>
+
+        <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Empty State -->
+            <div id="empty-state" class="col-span-full flex flex-col items-center justify-center py-20 opacity-40">
+                <i class="fas fa-crosshairs text-7xl mb-6"></i>
+                <p class="text-xl font-medium">Entrez un nom d'objet pour lancer la localisation</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Tracking Link -->
+    <div id="tracking-modal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel max-w-lg w-full p-8 shadow-2xl">
+            <div class="flex items-center gap-4 mb-6">
+                <div id="modal-icon"
+                    class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center border border-blue-500/30">
+                    <i class="fas fa-map-location-dot text-blue-400 text-2xl"></i>
+                </div>
+                <div>
+                    <h3 id="modal-title" class="text-2xl font-bold text-white">Objet Localisé</h3>
+                    <p id="modal-subtitle" class="text-slate-400">Caméra: <span id="modal-cam"
+                            class="text-blue-400 font-bold">CAM-01</span></p>
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="flex justify-between text-sm p-3 bg-slate-800/50 rounded-xl">
+                    <span class="text-slate-400">Type d'objet</span>
+                    <span id="modal-type" class="text-white font-semibold">Souris Optique</span>
+                </div>
+                <div class="flex justify-between text-sm p-3 bg-slate-800/50 rounded-xl">
+                    <span class="text-slate-400">Stabilité</span>
+                    <span id="modal-duration" class="text-green-400 font-semibold">124 min</span>
+                </div>
+                <div class="flex justify-between text-sm p-3 bg-slate-800/50 rounded-xl">
+                    <span class="text-slate-400">Confiance IA</span>
+                    <span id="modal-conf" class="text-yellow-500 font-semibold">94.2%</span>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="closeModal()"
+                    class="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-2xl font-bold transition-all">
+                    Annuler
+                </button>
+                <a id="modal-link" href="#"
+                    class="flex-[2] py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg shadow-blue-600/20">
+                    <i class="fas fa-eye"></i>
+                    Voir le Tracking Direct
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/ux-utils.js"></script>
+    <script src="/static/js/notification-service.js"></script>
+    <script src="/static/js/search.js"></script>
+    <script>
+        function closeModal() {
+            document.getElementById('tracking-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>

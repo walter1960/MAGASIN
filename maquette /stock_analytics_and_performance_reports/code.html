@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stock Analytics and Performance Reports - ASECNA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-dark": "#0f66bd",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-dark": "#1b2631",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101922; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2d3b4a; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3e4e60; 
+        }
+        
+        /* Chart Styles (CSS-only approximation for visualization purposes) */
+        .chart-grid {
+            background-image: linear-gradient(to right, #2d3b4a 1px, transparent 1px),
+                              linear-gradient(to bottom, #2d3b4a 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .bar-anim {
+            animation: growUp 1s ease-out forwards;
+            transform-origin: bottom;
+        }
+        @keyframes growUp {
+            from { transform: scaleY(0); }
+            to { transform: scaleY(1); }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-display min-h-screen flex flex-col">
+<!-- Top Navigation / Header -->
+<header class="w-full bg-white dark:bg-surface-dark border-b border-slate-200 dark:border-slate-800 h-16 flex items-center justify-between px-6 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-icons-outlined text-primary text-3xl">analytics</span>
+<h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">ASECNA Stock Analytics</h1>
+</div>
+<div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<nav class="flex items-center text-sm text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Dashboard</a>
+<span class="material-icons-outlined text-xs mx-1">chevron_right</span>
+<span class="text-slate-900 dark:text-white font-medium">Performance Reports</span>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-slate-100 dark:bg-background-dark px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+<span class="material-icons-outlined text-slate-400 text-sm">calendar_today</span>
+<span class="text-sm font-medium">Oct 01, 2023 - Oct 31, 2023</span>
+<span class="material-icons-outlined text-slate-400 text-sm ml-2 cursor-pointer hover:text-primary">expand_more</span>
+</div>
+<button class="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors">
+<span class="material-icons-outlined">refresh</span>
+                Refresh Data
+            </button>
+<div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs border border-primary/30">
+                JD
+            </div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 p-6 lg:p-8 max-w-[1600px] mx-auto w-full">
+<!-- KPI Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<!-- KPI Card 1 -->
+<div class="bg-white dark:bg-surface-dark p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-icons-outlined text-6xl text-primary">inventory_2</span>
+</div>
+<h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Stock Movements</h3>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-3xl font-bold text-slate-900 dark:text-white">12,450</span>
+<span class="text-sm font-medium text-emerald-500 flex items-center">
+<span class="material-icons-outlined text-sm">arrow_upward</span> 4.5%
+                    </span>
+</div>
+<p class="text-xs text-slate-500 mt-1">Vs. previous 30 days</p>
+</div>
+<!-- KPI Card 2 -->
+<div class="bg-white dark:bg-surface-dark p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-icons-outlined text-6xl text-primary">precision_manufacturing</span>
+</div>
+<h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Active Tools</h3>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-3xl font-bold text-slate-900 dark:text-white">842</span>
+<span class="text-sm font-medium text-emerald-500 flex items-center">
+<span class="material-icons-outlined text-sm">arrow_upward</span> 1.2%
+                    </span>
+</div>
+<p class="text-xs text-slate-500 mt-1">Currently in circulation</p>
+</div>
+<!-- KPI Card 3 -->
+<div class="bg-white dark:bg-surface-dark p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-icons-outlined text-6xl text-primary">warning_amber</span>
+</div>
+<h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Anomalies Detected</h3>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-3xl font-bold text-slate-900 dark:text-white">23</span>
+<span class="text-sm font-medium text-rose-500 flex items-center">
+<span class="material-icons-outlined text-sm">arrow_upward</span> 2
+                    </span>
+</div>
+<p class="text-xs text-slate-500 mt-1">Requires manual review</p>
+</div>
+<!-- KPI Card 4 -->
+<div class="bg-white dark:bg-surface-dark p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-icons-outlined text-6xl text-primary">videocam</span>
+</div>
+<h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">AI Confidence Score</h3>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-3xl font-bold text-slate-900 dark:text-white">98.2%</span>
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center">
+                        Stable
+                    </span>
+</div>
+<p class="text-xs text-slate-500 mt-1">YOLO Model v4.2</p>
+</div>
+</div>
+<!-- Charts Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<!-- Large Line Chart -->
+<div class="col-span-1 lg:col-span-2 bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h2 class="text-lg font-semibold text-slate-900 dark:text-white">Tool Usage Frequency</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400">Daily interaction volume tracked by video surveillance</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-1 text-xs text-slate-500">
+<span class="w-2 h-2 rounded-full bg-primary"></span> Authorized
+                        </span>
+<span class="flex items-center gap-1 text-xs text-slate-500">
+<span class="w-2 h-2 rounded-full bg-slate-600"></span> Predicted
+                        </span>
+</div>
+</div>
+<!-- Chart Container -->
+<div class="relative h-64 w-full chart-grid rounded-lg border border-slate-100 dark:border-slate-700/50 flex items-end justify-between px-4 pb-0 overflow-hidden">
+<!-- Y-axis Labels (Absolute) -->
+<div class="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-slate-400 py-2 pl-1 pr-2 pointer-events-none">
+<span>100</span>
+<span>75</span>
+<span>50</span>
+<span>25</span>
+<span>0</span>
+</div>
+<!-- Line Graph Representation (SVG) -->
+<svg class="absolute inset-0 w-full h-full pt-4 pl-8" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Gradient Fill -->
+<defs>
+<lineargradient id="gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#137fec; stop-opacity:0.3"></stop>
+<stop offset="100%" style="stop-color:#137fec; stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,80 Q10,70 20,75 T40,40 T60,50 T80,20 T100,30 V100 H0 Z" fill="url(#gradient)"></path>
+<path d="M0,80 Q10,70 20,75 T40,40 T60,50 T80,20 T100,30" fill="none" stroke="#137fec" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+<!-- X-axis Labels -->
+<div class="absolute bottom-1 left-8 right-0 flex justify-between text-xs text-slate-500 px-2">
+<span>Oct 1</span>
+<span>Oct 5</span>
+<span>Oct 10</span>
+<span>Oct 15</span>
+<span>Oct 20</span>
+<span>Oct 25</span>
+<span>Oct 30</span>
+</div>
+<!-- Hover Tooltip Indicator (Mockup) -->
+<div class="absolute top-[20%] left-[80%] w-px h-[80%] bg-slate-400 border-l border-dashed border-slate-500 z-10 hidden group-hover:block"></div>
+<div class="absolute top-[15%] left-[76%] bg-slate-900 text-white text-xs rounded px-2 py-1 z-20 shadow-lg hidden group-hover:block">
+<div class="font-bold">Oct 24</div>
+<div>Usage: 89</div>
+</div>
+</div>
+</div>
+<!-- Pie Chart Card -->
+<div class="col-span-1 bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col">
+<div class="mb-4">
+<h2 class="text-lg font-semibold text-slate-900 dark:text-white">Movement Anomalies</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400">Classification by AI confidence</p>
+</div>
+<div class="flex-1 flex flex-col items-center justify-center relative">
+<!-- CSS Conic Gradient Pie Chart -->
+<div class="w-48 h-48 rounded-full relative" style="background: conic-gradient(#137fec 0% 75%, #ef4444 75% 85%, #fbbf24 85% 100%);">
+<div class="absolute inset-0 m-auto w-32 h-32 bg-white dark:bg-surface-dark rounded-full flex items-center justify-center flex-col">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">986</span>
+<span class="text-xs text-slate-500 uppercase tracking-wide">Events</span>
+</div>
+</div>
+</div>
+<div class="mt-6 space-y-3">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-slate-600 dark:text-slate-300">Authorized</span>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">75%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-amber-400"></span>
+<span class="text-slate-600 dark:text-slate-300">Unidentified</span>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">15%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-rose-500"></span>
+<span class="text-slate-600 dark:text-slate-300">Unauthorized</span>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">10%</span>
+</div>
+</div>
+</div>
+<!-- Bar Chart Card -->
+<div class="col-span-1 lg:col-span-3 bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h2 class="text-lg font-semibold text-slate-900 dark:text-white">Stock Rotation by Category</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400">Comparing turnover rates across departments</p>
+</div>
+<div class="bg-slate-100 dark:bg-background-dark p-1 rounded-lg flex text-xs font-medium">
+<button class="px-3 py-1 bg-white dark:bg-surface-dark shadow text-primary rounded-md">Volume</button>
+<button class="px-3 py-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">Value</button>
+</div>
+</div>
+<div class="w-full h-48 flex items-end justify-around gap-4 px-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+<!-- Electronics -->
+<div class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+<div class="w-12 bg-primary rounded-t-md relative bar-anim" style="height: 85%;">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">85%</div>
+</div>
+</div>
+<!-- Mechanical -->
+<div class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+<div class="w-12 bg-primary/70 rounded-t-md relative bar-anim" style="height: 60%;">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">60%</div>
+</div>
+</div>
+<!-- Safety -->
+<div class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+<div class="w-12 bg-primary/40 rounded-t-md relative bar-anim" style="height: 45%;">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">45%</div>
+</div>
+</div>
+<!-- Avionics -->
+<div class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+<div class="w-12 bg-primary/60 rounded-t-md relative bar-anim" style="height: 72%;">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">72%</div>
+</div>
+</div>
+<!-- Hydraulics -->
+<div class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+<div class="w-12 bg-primary/30 rounded-t-md relative bar-anim" style="height: 30%;">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">30%</div>
+</div>
+</div>
+</div>
+<div class="flex justify-around text-xs text-slate-500 dark:text-slate-400 mt-3 font-medium">
+<span>Electronics</span>
+<span>Mechanical</span>
+<span>Safety Eq.</span>
+<span>Avionics</span>
+<span>Hydraulics</span>
+</div>
+</div>
+</div>
+<!-- Export Section -->
+<div class="mt-auto bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-start gap-4">
+<div class="p-3 bg-primary/10 rounded-lg text-primary">
+<span class="material-icons-outlined text-2xl">description</span>
+</div>
+<div>
+<h3 class="text-base font-semibold text-slate-900 dark:text-white">Export Monthly Audit Report</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">Generate a compliant audit file including all detected anomalies, stock rotation logs, and AI confidence metrics for the selected period.</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-background-dark hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm font-medium">
+<span class="material-icons-outlined text-green-600 text-[18px]">table_view</span>
+                    Excel (.xlsx)
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-background-dark hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm font-medium">
+<span class="material-icons-outlined text-blue-400 text-[18px]">code</span>
+                    CSV
+                </button>
+<button class="flex items-center gap-2 px-6 py-2 rounded-lg bg-primary hover:bg-primary-dark text-white shadow-lg shadow-primary/20 transition-all text-sm font-medium">
+<span class="material-icons-outlined text-[18px]">picture_as_pdf</span>
+                    Download PDF
+                </button>
+</div>
+</div>
+</main>
+</body></html>

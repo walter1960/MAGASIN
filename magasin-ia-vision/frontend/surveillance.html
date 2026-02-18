@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>VisionStock Real-time Surveillance Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-dark": "#1a2632",
+                        "surface-border": "#2c3b49",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["Roboto Mono", "monospace"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Roboto+Mono:wght@400;500&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #101922;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2c3b49;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #137fec;
+        }
+
+        .grid-overlay {
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-slate-200 font-display h-screen flex overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside
+        class="w-20 lg:w-64 bg-surface-dark border-r border-surface-border flex flex-col z-20 transition-all duration-300">
+        <div class="h-16 flex items-center justify-center lg:justify-start lg:px-6 border-b border-surface-border">
+            <div
+                class="w-8 h-8 rounded bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg">
+                <span class="material-icons text-white text-lg">visibility</span>
+            </div>
+            <div class="hidden lg:block ml-3">
+                <h1 class="font-bold text-lg text-white">VisionStock</h1>
+                <p class="text-[10px] uppercase text-slate-500 font-semibold">ASECNA Surveillance</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 py-6 space-y-1">
+            <a href="monitoring.html"
+                class="flex items-center px-4 lg:px-6 py-3 text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <span class="material-icons">dashboard</span>
+                <span class="hidden lg:block ml-3 font-medium">Dashboard</span>
+            </a>
+            <a href="inventory.html"
+                class="flex items-center px-4 lg:px-6 py-3 text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <span class="material-icons">inventory_2</span>
+                <span class="hidden lg:block ml-3 font-medium">Inventaire</span>
+            </a>
+            <a href="surveillance.html"
+                class="flex items-center px-4 lg:px-6 py-3 border-l-4 border-primary bg-primary/10 text-primary">
+                <span class="material-icons">grid_view</span>
+                <span class="hidden lg:block ml-3 font-medium">Surveillance</span>
+            </a>
+            <a href="validation.html"
+                class="flex items-center px-4 lg:px-6 py-3 text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <span class="material-icons">fact_check</span>
+                <span class="hidden lg:block ml-3 font-medium">Validations IA</span>
+            </a>
+            <div class="pt-4 pb-2 px-6 hidden lg:block text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+                Système</div>
+            <a href="config.html"
+                class="flex items-center px-4 lg:px-6 py-3 text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <span class="material-icons">settings</span>
+                <span class="hidden lg:block ml-3 font-medium">Configuration</span>
+            </a>
+            <a href="search.html"
+                class="flex items-center px-4 lg:px-6 py-3 text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <span class="material-icons">search</span>
+                <span class="hidden lg:block ml-3 font-medium">Recherche</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-surface-border hidden lg:block">
+            <button onclick="window.history.back()"
+                class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all">
+                <span class="material-icons text-sm">arrow_back</span>
+                Retour
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="h-16 flex items-center justify-between px-6 bg-surface-dark/50 border-b border-surface-border">
+            <div class="flex items-center gap-4">
+                <h2 class="text-xl font-semibold text-white">Live Monitoring</h2>
+                <span
+                    class="px-2.5 py-0.5 rounded-full bg-red-500/10 text-red-500 text-xs font-bold border border-red-500/20 flex items-center gap-1.5 animate-pulse">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                    LIVE
+                </span>
+            </div>
+
+            <!-- Model Selection UI -->
+            <div class="hidden xl:flex items-center gap-4 bg-black/20 p-1.5 rounded-lg border border-surface-border">
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] uppercase font-bold text-slate-500">Detector</span>
+                    <select id="detector-select"
+                        class="bg-surface-dark border-surface-border text-xs rounded text-white focus:ring-primary h-8"></select>
+                </div>
+                <div class="w-px h-6 bg-surface-border"></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] uppercase font-bold text-slate-500">Tracker</span>
+                    <select id="tracker-select"
+                        class="bg-surface-dark border-surface-border text-xs rounded text-white focus:ring-primary h-8"></select>
+                </div>
+                <div class="w-px h-6 bg-surface-border"></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] uppercase font-bold text-slate-500">Segmenter</span>
+                    <select id="segmenter-select"
+                        class="bg-surface-dark border-surface-border text-xs rounded text-white focus:ring-primary h-8"></select>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6 text-sm text-slate-400">
+                <div id="notification-toast"
+                    class="hidden px-3 py-1.5 rounded bg-primary text-white text-xs font-medium animate-bounce shadow-lg shadow-primary/20">
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-icons text-green-500 text-base">check_circle</span>
+                    <span>AI Engine: <span id="ai-status" class="text-slate-200 font-mono">ONLINE</span></span>
+                </div>
+                <div class="font-mono text-white" id="clock">00:00:00 UTC</div>
+            </div>
+        </header>
+
+        <!-- Video Grid -->
+        <div class="flex-1 p-6 overflow-y-auto">
+            <div id="camera-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-full">
+                <!-- Dynamically populated -->
+                <div class="col-span-full flex items-center justify-center p-20">
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                        <p class="text-slate-500 font-mono">Initializing camera grid...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Fullscreen Modal -->
+    <div id="video-modal" class="fixed inset-0 z-50 hidden bg-black flex flex-col group/modal">
+        <!-- Minimalist Floating Header -->
+        <div
+            class="absolute top-0 left-0 w-full h-16 flex items-center justify-between px-6 bg-gradient-to-b from-black/80 to-transparent z-10 transition-opacity opacity-0 group-hover/modal:opacity-100">
+            <div class="flex items-center gap-4">
+                <span id="modal-cam-id" class="font-mono text-xs text-white bg-primary px-2 py-0.5 rounded"></span>
+                <h3 id="modal-cam-name" class="text-lg font-semibold text-white"></h3>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="surveillanceController.toggleFullscreen()"
+                    class="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all">
+                    <span class="material-icons">fullscreen</span>
+                </button>
+                <button onclick="surveillanceController.unfocusCamera()"
+                    class="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Immersive Video Area -->
+        <div class="flex-1 relative bg-black overflow-hidden flex items-center justify-center">
+            <canvas id="modal-canvas" class="w-full h-full object-contain pointer-events-none"></canvas>
+            <div class="absolute inset-0 grid-overlay pointer-events-none opacity-[0.03]"></div>
+        </div>
+    </div>
+
+    <!-- Global Model Switch Loader -->
+    <div id="global-loader"
+        class="fixed inset-0 z-[60] hidden bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center gap-6">
+        <div class="relative">
+            <div class="animate-spin rounded-full h-24 w-24 border-b-4 border-primary"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <span class="material-icons text-primary text-3xl animate-pulse">psychology</span>
+            </div>
+        </div>
+        <div class="text-center">
+            <h2 class="text-xl font-bold text-white mb-2">Switching AI Engine</h2>
+            <p id="loader-msg" class="text-slate-400 font-mono text-sm animate-pulse italic">Reconfiguring neural
+                weights...</p>
+        </div>
+    </div>
+
+    <!-- Load Video Stream Script -->
+    <script src="/static/js/video-stream.js"></script>
+    <script>
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB', { hour12: false }) + ' UTC';
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Surveillance Page Controller
+        class SurveillanceController {
+            constructor() {
+                this.streams = new Map();
+                this.grid = document.getElementById('camera-grid');
+                this.modal = document.getElementById('video-modal');
+                this.modalStream = null;
+                this.focusedId = null;
+            }
+
+            async init() {
+                try {
+                    const response = await fetch('/api/cameras/status');
+                    const result = await response.json();
+
+                    if (result.success) {
+                        this.cameras = result.cameras || {};
+                        this.renderGrid(this.cameras);
+                    }
+                } catch (error) {
+                    console.error('[Surveillance] Failed to load cameras:', error);
+                    this.grid.innerHTML = `<p class="col-span-full text-red-500 text-center">Failed to connect to backend.</p>`;
+                }
+            }
+
+            renderGrid(cameras) {
+                this.grid.innerHTML = '';
+
+                // Always include the default webcam if not present
+                const cameraEntries = Object.entries(cameras);
+                if (cameraEntries.length === 0) {
+                    cameraEntries.push(['0', { zone: 'Webcam Locale', source: '0', running: true }]);
+                }
+
+                cameraEntries.forEach(([id, cam]) => {
+                    const camCard = this.createCameraCard(id, cam);
+                    this.grid.appendChild(camCard);
+
+                    // Initialize Stream
+                    const stream = new VideoStreamManager(`canvas-${id}`, id);
+                    stream.connect();
+                    this.streams.set(id, stream);
+                });
+            }
+
+            createCameraCard(id, cam) {
+                const div = document.createElement('div');
+                div.className = "relative group bg-black rounded-lg overflow-hidden border border-surface-border shadow-lg flex flex-col aspect-video";
+                div.innerHTML = `
+                    <div class="absolute top-0 left-0 w-full p-3 flex justify-between items-start z-10 bg-gradient-to-b from-black/80 to-transparent">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono text-[10px] text-white bg-black/50 px-1.5 py-0.5 rounded border border-white/20">${id}</span>
+                                <span class="text-xs font-medium text-white">${cam.zone}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="surveillanceController.focusCamera('${id}')" 
+                                class="p-1.5 bg-black/40 hover:bg-primary/80 text-white rounded transition-all opacity-0 group-hover:opacity-100">
+                                <span class="material-icons text-sm">fullscreen</span>
+                            </button>
+                            <span class="w-1.5 h-1.5 rounded-full ${cam.running ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]'}"></span>
+                        </div>
+                    </div>
+                    <div class="relative flex-1 bg-slate-900 flex items-center justify-center overflow-hidden">
+                        <canvas id="canvas-${id}" class="w-full h-full object-contain"></canvas>
+                        <div class="absolute inset-0 grid-overlay pointer-events-none opacity-20"></div>
+                    </div>
+                `;
+                return div;
+            }
+
+            focusCamera(id) {
+                const cam = this.cameras[id];
+                if (!cam) return;
+
+                this.focusedId = id;
+
+                // Stop small stream to save bandwidth
+                const smallStream = this.streams.get(id);
+                if (smallStream) smallStream.disconnect();
+
+                // Setup modal
+                this.modal.classList.remove('hidden');
+                document.getElementById('modal-cam-id').textContent = id;
+                document.getElementById('modal-cam-name').textContent = cam.zone;
+
+                // Start large stream
+                this.modalStream = new VideoStreamManager('modal-canvas', id);
+                this.modalStream.connect();
+
+                // Block body scroll
+                document.body.style.overflow = 'hidden';
+            }
+
+            unfocusCamera() {
+                if (!this.focusedId) return;
+
+                // Stop modal stream
+                if (this.modalStream) {
+                    this.modalStream.disconnect();
+                    this.modalStream = null;
+                }
+
+                this.modal.classList.add('hidden');
+
+                // Restart small stream
+                const smallStream = this.streams.get(this.focusedId);
+                if (smallStream) smallStream.connect();
+
+                this.focusedId = null;
+
+                // Restore scroll
+                document.body.style.overflow = '';
+            }
+
+            toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    this.modal.requestFullscreen().catch(err => {
+                        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Initialize
+        let surveillanceController;
+        document.addEventListener('DOMContentLoaded', () => {
+            surveillanceController = new SurveillanceController();
+            surveillanceController.init();
+
+            // Setup Model Switch Handlers with Loading
+            const setupSelector = (id, endpoint, label) => {
+                const select = document.getElementById(id);
+                if (!select) return;
+
+                select.addEventListener('change', async (e) => {
+                    const val = e.target.value;
+                    const loader = document.getElementById('global-loader');
+                    const loaderMsg = document.getElementById('loader-msg');
+
+                    loader.classList.remove('hidden');
+                    loaderMsg.textContent = `Optimizing ${label} for all cameras...`;
+
+                    try {
+                        const res = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: val }) // Backend expects query params or body depending on impl
+                        });
+                        // Note: Our backend switch_detector expects model_id as a query param
+                        // Re-fetching with correct format
+                        await fetch(`${endpoint}?model_id=${val}`, { method: 'POST' });
+                        if (id === 'tracker-select') await fetch(`${endpoint.replace('segmentation', 'tracker')}?tracker_id=${val}`, { method: 'POST' });
+
+                    } catch (err) {
+                        console.error(`Failed to switch ${label}:`, err);
+                    } finally {
+                        // Keep loader for a bit to allow VRAM cleanup
+                        setTimeout(() => loader.classList.add('hidden'), 800);
+                    }
+                });
+            };
+
+            setupSelector('detector-select', '/api/models/detector', 'Detector');
+            setupSelector('tracker-select', '/api/models/tracker', 'Tracker');
+            setupSelector('segmenter-select', '/api/models/segmentation', 'Segmenter');
+        });
+
+        // Global Alert Handler
+        window.showNotification = (message, type = 'success') => {
+            const toast = document.getElementById('notification-toast');
+            if (toast) {
+                toast.textContent = message;
+                toast.classList.remove('hidden', 'bg-primary', 'bg-red-500');
+                toast.classList.add(type === 'error' ? 'bg-red-500' : 'bg-primary');
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 3000);
+            }
+        };
+    </script>
+
+    <!-- External App Logic -->
+    <script src="/static/js/ux-utils.js"></script>
+    <script src="/static/js/notification-service.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>

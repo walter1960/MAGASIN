@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Stock Analytics and Performance Reports - ASECNA</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-dark": "#0f66bd",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-dark": "#1b2631",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #101922;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2d3b4a;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3e4e60;
+        }
+
+        /* Chart Styles (CSS-only approximation for visualization purposes) */
+        .chart-grid {
+            background-image: linear-gradient(to right, #2d3b4a 1px, transparent 1px),
+                linear-gradient(to bottom, #2d3b4a 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .bar-anim {
+            animation: growUp 1s ease-out forwards;
+            transform-origin: bottom;
+        }
+
+        @keyframes growUp {
+            from {
+                transform: scaleY(0);
+            }
+
+            to {
+                transform: scaleY(1);
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-display min-h-screen flex flex-col">
+    <!-- Top Navigation / Header -->
+    <header
+        class="w-full bg-white dark:bg-surface-dark border-b border-slate-200 dark:border-slate-800 h-16 flex items-center justify-between px-6 sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-primary text-3xl">analytics</span>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">ASECNA Stock Analytics</h1>
+            </div>
+            <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+            <nav class="flex items-center text-sm text-slate-500 dark:text-slate-400">
+                <a class="hover:text-primary transition-colors" href="#">Dashboard</a>
+                <span class="material-icons-outlined text-xs mx-1">chevron_right</span>
+                <span class="text-slate-900 dark:text-white font-medium">Performance Reports</span>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <div
+                class="flex items-center gap-2 bg-slate-100 dark:bg-background-dark px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                <span class="material-icons-outlined text-slate-400 text-sm">calendar_today</span>
+                <span class="text-sm font-medium">Oct 01, 2023 - Oct 31, 2023</span>
+                <span
+                    class="material-icons-outlined text-slate-400 text-sm ml-2 cursor-pointer hover:text-primary">expand_more</span>
+            </div>
+            <button
+                class="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors">
+                <span class="material-icons-outlined">refresh</span>
+                Refresh Data
+            </button>
+            <div
+                class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs border border-primary/30">
+                JD
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="flex-1 p-6 lg:p-8 max-w-[1600px] mx-auto w-full">
+        <!-- KPI Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- KPI Card 1 -->
+            <div
+                class="bg-white dark:bg-surface-dark p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-icons-outlined text-6xl text-primary">inventory_2</span>
+                </div>
+                <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Stock
+                    Items</h3>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span id="kpi-stock" class="text-3xl font-bold text-slate-900 dark:text-white">1,385</span>
+                    <span class="text-sm font-medium text-emerald-500 flex items-center">
+                        <span class="material-icons-outlined text-sm">arrow_upward</span> 4.5%
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Vs. previous 30 days</p>
+            </div>
+            <!-- KPI Card 2 -->
+            <div
+                class="bg-white dark:bg-surface-dark p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-icons-outlined text-6xl text-primary">precision_manufacturing</span>
+                </div>
+                <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total
+                    Inventory Value</h3>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span id="kpi-value" class="text-3xl font-bold text-slate-900 dark:text-white">€89.4K</span>
+                    <span class="text-sm font-medium text-emerald-500 flex items-center">
+                        <span class="material-icons-outlined text-sm">arrow_upward</span> 1.2%
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Currently in circulation</p>
+            </div>
+            <!-- KPI Card 3 -->
+            <div
+                class="bg-white dark:bg-surface-dark p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-icons-outlined text-6xl text-primary">warning_amber</span>
+                </div>
+                <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Movements
+                    Today</h3>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span id="kpi-movements" class="text-3xl font-bold text-slate-900 dark:text-white">23</span>
+                    <span class="text-sm font-medium text-rose-500 flex items-center">
+                        <span class="material-icons-outlined text-sm">arrow_upward</span> 2
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Requires manual review</p>
+            </div>
+            <!-- KPI Card 4 -->
+            <div
+                class="bg-white dark:bg-surface-dark p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-icons-outlined text-6xl text-primary">videocam</span>
+                </div>
+                <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">AI Accuracy
+                </h3>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span id="kpi-accuracy" class="text-3xl font-bold text-slate-900 dark:text-white">91%</span>
+                    <span class="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center">
+                        Stable
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">YOLO Model v4.2</p>
+            </div>
+        </div>
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Large Line Chart -->
+            <div
+                class="col-span-1 lg:col-span-2 bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Stock Movements Trend</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Entry vs Exit tracking for last 7 days</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="flex items-center gap-1 text-xs text-slate-500">
+                            <span class="w-2 h-2 rounded-full bg-primary"></span> Authorized
+                        </span>
+                        <span class="flex items-center gap-1 text-xs text-slate-500">
+                            <span class="w-2 h-2 rounded-full bg-slate-600"></span> Predicted
+                        </span>
+                    </div>
+                </div>
+                <!-- Chart Content -->
+                <div class="flex-1 relative min-h-[280px]">
+                    <canvas id="movementsTrendChart"></canvas>
+                </div>
+            </div>
+            <!-- Pie Chart Card -->
+            <div
+                class="col-span-1 bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col">
+                <div class="mb-4">
+                    <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Stock Distribution</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">By equipment category</p>
+                </div>
+                <!-- Pie Chart Content -->
+                <div class="flex-1 flex items-center justify-center min-h-[240px]">
+                    <canvas id="stockDistributionChart"></canvas>
+                </div>
+            </div>
+            <!-- Bar Chart Card -->
+            <div
+                class="col-span-1 lg:col-span-3 bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Stock Rotation by Category</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Comparing turnover rates across
+                            departments</p>
+                    </div>
+                    <div class="bg-slate-100 dark:bg-background-dark p-1 rounded-lg flex text-xs font-medium">
+                        <button
+                            class="px-3 py-1 bg-white dark:bg-surface-dark shadow text-primary rounded-md">Volume</button>
+                        <button
+                            class="px-3 py-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">Value</button>
+                    </div>
+                </div>
+                <div
+                    class="w-full h-48 flex items-end justify-around gap-4 px-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+                    <!-- Electronics -->
+                    <div
+                        class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+                        <div class="w-12 bg-primary rounded-t-md relative bar-anim" style="height: 85%;">
+                            <div
+                                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                85%</div>
+                        </div>
+                    </div>
+                    <!-- Mechanical -->
+                    <div
+                        class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+                        <div class="w-12 bg-primary/70 rounded-t-md relative bar-anim" style="height: 60%;">
+                            <div
+                                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                60%</div>
+                        </div>
+                    </div>
+                    <!-- Safety -->
+                    <div
+                        class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+                        <div class="w-12 bg-primary/40 rounded-t-md relative bar-anim" style="height: 45%;">
+                            <div
+                                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                45%</div>
+                        </div>
+                    </div>
+                    <!-- Avionics -->
+                    <div
+                        class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+                        <div class="w-12 bg-primary/60 rounded-t-md relative bar-anim" style="height: 72%;">
+                            <div
+                                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                72%</div>
+                        </div>
+                    </div>
+                    <!-- Hydraulics -->
+                    <div
+                        class="group relative flex-1 bg-slate-800/20 dark:bg-slate-700/20 rounded-t-lg h-full flex items-end justify-center">
+                        <div class="w-12 bg-primary/30 rounded-t-md relative bar-anim" style="height: 30%;">
+                            <div
+                                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                30%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-around text-xs text-slate-500 dark:text-slate-400 mt-3 font-medium">
+                    <span>Electronics</span>
+                    <span>Mechanical</span>
+                    <span>Safety Eq.</span>
+                    <span>Avionics</span>
+                    <span>Hydraulics</span>
+                </div>
+            </div>
+        </div>
+        <!-- Export Section -->
+        <div
+            class="mt-auto bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-start gap-4">
+                <div class="p-3 bg-primary/10 rounded-lg text-primary">
+                    <span class="material-icons-outlined text-2xl">description</span>
+                </div>
+                <div>
+                    <h3 class="text-base font-semibold text-slate-900 dark:text-white">Export Monthly Audit Report</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">Generate a compliant audit file
+                        including all detected anomalies, stock rotation logs, and AI confidence metrics for the
+                        selected period.</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+                <button id="export-excel-btn"
+                    class="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-background-dark hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm font-medium">
+                    <span class="material-icons-outlined text-green-600 text-[18px]">table_view</span>
+                    Excel (.xlsx)
+                </button>
+                <button id="export-csv-btn"
+                    class="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-background-dark hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm font-medium">
+                    <span class="material-icons-outlined text-blue-400 text-[18px]">code</span>
+                    CSV
+                </button>
+                <button id="refresh-btn"
+                    class="flex items-center gap-2 px-6 py-2 rounded-lg bg-primary hover:bg-primary-dark text-white shadow-lg shadow-primary/20 transition-all text-sm font-medium">
+                    <span class="material-icons-outlined text-[18px]">refresh</span>
+                    Refresh Data
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Analytics JavaScript -->
+    <script src="/static/js/ux-utils.js"></script>
+    <script src="/static/js/notification-service.js"></script>
+    <script src="/static/js/analytics.js"></script>
+
+</body>
+
+</html>

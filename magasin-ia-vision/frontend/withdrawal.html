@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ASECNA Material Withdrawal Requests</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-dark": "#0e66c2",
+                        "background-dark": "#101922",
+                        "surface-dark": "#16202c",
+                        "success": "#10b981",
+                        "warning": "#f59e0b",
+                        "danger": "#ef4444",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark text-slate-200 font-display min-h-screen flex overflow-hidden">
+    <!-- Sidebar -->
+    <aside
+        class="w-64 bg-surface-dark border-r border-slate-800 flex flex-col z-20 shadow-2xl transition-all duration-300">
+        <div class="p-6 flex items-center gap-3 border-b border-slate-800">
+            <div
+                class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30">
+                A
+            </div>
+            <div>
+                <h1 class="font-bold text-lg tracking-tight text-white leading-tight">Stock<span
+                        class="text-primary">IA</span></h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">ASECNA Logistics</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-1">
+            <a href="monitoring.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-chart-pie w-5"></i>
+                <span class="font-medium">Tableau de bord</span>
+            </a>
+            <a href="inventory.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-box w-5"></i>
+                <span class="font-medium">Inventaire</span>
+            </a>
+            <a href="surveillance.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-video w-5"></i>
+                <span class="font-medium">Surveillance Live</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest">Fonctions
+                Avancées</div>
+            <a href="withdrawal.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white bg-primary shadow-lg active">
+                <i class="fas fa-truck-ramp-box w-5"></i>
+                <span class="font-medium">Retraits Matériel</span>
+            </a>
+            <a href="validation.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-check-double w-5"></i>
+                <span class="font-medium">Validations IA</span>
+            </a>
+            <a href="config.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-cog w-5"></i>
+                <span class="font-medium">Configuration</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-800">
+            <button onclick="window.history.back()"
+                class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all">
+                <i class="fas fa-arrow-left"></i>
+                Retour
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-16 flex items-center justify-between px-8 bg-surface-dark border-b border-neutral-700 z-10">
+            <h2 class="text-xl font-bold text-white">Retraits de Matériel ASECNA</h2>
+            <div class="flex items-center gap-4">
+                <button
+                    class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors border border-neutral-700">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+        </header>
+        <main class="flex-1 overflow-y-auto p-8">
+            <!-- Title -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-2">Withdrawal Requests</h2>
+                    <p class="text-slate-400">Manage material requests from 19 African countries</p>
+                </div>
+                <button id="new-withdrawal-btn"
+                    class="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium shadow-lg shadow-primary/25 transition-all">
+                    <span class="material-icons">add</span>
+                    New Request
+                </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-surface-dark p-6 rounded-xl border border-neutral-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-slate-400 mb-1">Pending</p>
+                            <h3 class="text-3xl font-bold text-warning">12</h3>
+                        </div>
+                        <div class="p-3 bg-warning/10 rounded-lg">
+                            <span class="material-icons text-warning text-3xl">pending_actions</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-dark p-6 rounded-xl border border-neutral-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-slate-400 mb-1">Approved</p>
+                            <h3 class="text-3xl font-bold text-success">8</h3>
+                        </div>
+                        <div class="p-3 bg-success/10 rounded-lg">
+                            <span class="material-icons text-success text-3xl">check_circle</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-dark p-6 rounded-xl border border-neutral-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-slate-400 mb-1">Completed</p>
+                            <h3 class="text-3xl font-bold text-blue-400">45</h3>
+                        </div>
+                        <div class="p-3 bg-blue-500/10 rounded-lg">
+                            <span class="material-icons text-blue-400 text-3xl">done_all</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-dark p-6 rounded-xl border border-neutral-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-slate-400 mb-1">This Month</p>
+                            <h3 class="text-3xl font-bold text-primary">65</h3>
+                        </div>
+                        <div class="p-3 bg-primary/10 rounded-lg">
+                            <span class="material-icons text-primary text-3xl">calendar_today</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="bg-surface-dark p-4 rounded-t-xl border border-neutral-700 border-b-0 flex gap-4">
+                <select id="status-filter"
+                    class="px-4 py-2 bg-background-dark border border-neutral-700 rounded-lg text-slate-300 focus:outline-none focus:border-primary">
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="completed">Completed</option>
+                </select>
+                <select id="country-filter"
+                    class="px-4 py-2 bg-background-dark border border-neutral-700 rounded-lg text-slate-300 focus:outline-none focus:border-primary">
+                    <option value="all">All Countries</option>
+                    <option value="Bénin">Bénin</option>
+                    <option value="Burkina Faso">Burkina Faso</option>
+                    <option value="Cameroun">Cameroun</option>
+                    <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+                    <option value="Gabon">Gabon</option>
+                    <option value="Mali">Mali</option>
+                    <option value="Sénégal">Sénégal</option>
+                </select>
+            </div>
+
+            <!-- Requests Table -->
+            <div class="bg-surface-dark border border-neutral-700 rounded-b-xl overflow-hidden shadow-xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr
+                                class="bg-neutral-800/50 text-slate-400 text-xs uppercase tracking-wider font-semibold border-b border-neutral-700">
+                                <th class="px-6 py-4">Request ID</th>
+                                <th class="px-6 py-4">Requester</th>
+                                <th class="px-6 py-4">Equipment</th>
+                                <th class="px-6 py-4">Quantity</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4">Requested</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawals-tbody" class="divide-y divide-neutral-700 text-sm">
+                            <!-- Will be populated by withdrawal.js -->
+                            <tr>
+                                <td colspan="7" class="px-6 py-8 text-center text-slate-400">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <span class="material-icons text-4xl">hourglass_empty</span>
+                                        <p>Loading withdrawal requests...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- Withdrawal Management JavaScript -->
+        <script src="/static/js/withdrawal.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ASECNA Intelligent Inventory Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-dark": "#0e66c2",
+                        "primary-light": "#5fa8f4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-dark": "#16202c",
+                        "surface-light": "#ffffff",
+                        "neutral-800": "#1e293b",
+                        "neutral-700": "#334155",
+                        "neutral-600": "#475569",
+                        "neutral-400": "#94a3b8",
+                        "danger": "#ef4444",
+                        "warning": "#f59e0b",
+                        "success": "#10b981",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for dark theme data tables */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #101922;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Subtle glass effect for top bar */
+        .glass-panel {
+            background: rgba(22, 32, 44, 0.7);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-display h-screen flex overflow-hidden">
+    <!-- Sidebar -->
+    <aside
+        class="w-64 bg-surface-dark border-r border-slate-800 flex flex-col z-20 shadow-2xl transition-all duration-300">
+        <div class="p-6 flex items-center gap-3 border-b border-slate-800">
+            <div
+                class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30">
+                A
+            </div>
+            <div>
+                <h1 class="font-bold text-lg tracking-tight text-white leading-tight">Stock<span
+                        class="text-primary">IA</span></h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">ASECNA Logistics</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-1">
+            <a href="monitoring.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-chart-pie w-5"></i>
+                <span class="font-medium">Tableau de bord</span>
+            </a>
+            <a href="inventory.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white bg-primary shadow-lg shadow-primary/20 active">
+                <i class="fas fa-box w-5 text-white"></i>
+                <span class="font-medium">Inventaire</span>
+            </a>
+            <a href="surveillance.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-video w-5"></i>
+                <span class="font-medium">Surveillance Live</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest">IA & Système
+            </div>
+            <a href="validation.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-check-double w-5"></i>
+                <span class="font-medium">Validations IA</span>
+            </a>
+            <a href="config.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-cog w-5"></i>
+                <span class="font-medium">Configuration</span>
+            </a>
+            <a href="search.html"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                <i class="fas fa-search w-5"></i>
+                <span class="font-medium">Recherche</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-800">
+            <button onclick="window.history.back()"
+                class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all">
+                <i class="fas fa-arrow-left"></i>
+                Retour
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Top Actions Bar -->
+        <header class="h-16 flex items-center justify-between px-8 bg-surface-dark border-b border-slate-800 z-10">
+            <div class="flex items-center gap-4">
+                <h2 class="text-xl font-bold text-white">Inventaire Intelligent</h2>
+                <div class="h-4 w-px bg-slate-700"></div>
+                <div class="flex items-center gap-2 text-xs text-slate-400">
+                    <span class="material-icons text-green-500 text-sm">sensors</span>
+                    IA Counting Active
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button
+                    class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors border border-slate-700">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold text-white mb-2">Technical Warehouse Inventory</h1>
+                <p class="text-slate-400">Real-time tracking of technical assets via YOLOv8 surveillance integration.
+                </p>
+            </div>
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Items -->
+                <div
+                    class="bg-surface-dark rounded-xl p-6 border border-neutral-700/50 shadow-lg relative overflow-hidden group hover:border-primary/50 transition-colors duration-300">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="material-icons text-6xl text-primary">inventory_2</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p class="text-sm font-medium text-slate-400 mb-1">Total Inventory</p>
+                        <div class="flex items-baseline gap-2">
+                            <h3 id="stat-total-inventory" class="text-3xl font-bold text-white">---</h3>
+                            <span
+                                class="text-xs font-medium text-success bg-success/10 px-1.5 py-0.5 rounded flex items-center">
+                                <span class="material-icons text-xs mr-0.5">trending_up</span> +2.5%
+                            </span>
+                        </div>
+                        <div class="w-full bg-neutral-700 h-1 mt-4 rounded-full overflow-hidden">
+                            <div class="bg-primary h-1 rounded-full" style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Items In Use -->
+                <div
+                    class="bg-surface-dark rounded-xl p-6 border border-neutral-700/50 shadow-lg relative overflow-hidden group hover:border-primary/50 transition-colors duration-300">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="material-icons text-6xl text-blue-400">engineering</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p class="text-sm font-medium text-slate-400 mb-1">Active / In Use</p>
+                        <h3 id="stat-active-use" class="text-3xl font-bold text-white">---</h3>
+                        <p class="text-xs text-slate-500 mt-1">60% utilization rate</p>
+                        <div class="w-full bg-neutral-700 h-1 mt-4 rounded-full overflow-hidden">
+                            <div class="bg-blue-400 h-1 rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Critical Alerts -->
+                <div
+                    class="bg-surface-dark rounded-xl p-6 border border-danger/20 shadow-lg shadow-danger/5 relative overflow-hidden group hover:border-danger/50 transition-colors duration-300">
+                    <div
+                        class="absolute -right-6 -top-6 w-24 h-24 bg-danger/10 rounded-full blur-xl group-hover:bg-danger/20 transition-all">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-medium text-red-200 mb-1">Critical Alerts</p>
+                                <h3 id="stat-critical-alerts" class="text-3xl font-bold text-danger">---</h3>
+                            </div>
+                            <div class="p-2 bg-danger/10 rounded-lg">
+                                <span class="material-icons text-danger animate-pulse">warning</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-red-300/70 mt-3">Unauthorized movements detected in Restricted Zone B.
+                        </p>
+                    </div>
+                </div>
+                <!-- Low Stock -->
+                <div
+                    class="bg-surface-dark rounded-xl p-6 border border-warning/20 shadow-lg shadow-warning/5 relative overflow-hidden group hover:border-warning/50 transition-colors duration-300">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-medium text-amber-200 mb-1">Low Stock Warnings</p>
+                                <h3 id="stat-low-stock" class="text-3xl font-bold text-warning">---</h3>
+                            </div>
+                            <div class="p-2 bg-warning/10 rounded-lg">
+                                <span class="material-icons text-warning">low_priority</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-amber-200/60 mt-3">Consumables below 15% threshold.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Filter & Action Bar -->
+            <div
+                class="bg-surface-dark p-4 rounded-t-xl border border-neutral-700 border-b-0 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <!-- Search & Filters -->
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto flex-1">
+                    <div class="relative w-full sm:w-64 group">
+                        <span
+                            class="material-icons absolute left-3 top-2.5 text-slate-500 group-focus-within:text-primary transition-colors text-xl">search</span>
+                        <input id="search-input"
+                            class="w-full pl-10 pr-4 py-2 bg-background-dark border border-neutral-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                            placeholder="Search by ID, Name or Tag..." type="text" />
+                    </div>
+                    <div class="relative w-full sm:w-48">
+                        <select id="category-filter"
+                            class="w-full pl-3 pr-8 py-2 bg-background-dark border border-neutral-700 rounded-lg text-sm text-slate-300 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+                            <option value="all">All Categories</option>
+                            <option value="IT Components">IT Components</option>
+                            <option value="IT Equipment">IT Equipment</option>
+                            <option value="HVAC">HVAC</option>
+                            <option value="Office Supplies">Office Supplies</option>
+                        </select>
+                        <span
+                            class="material-icons absolute right-2 top-2.5 text-slate-500 pointer-events-none text-lg">expand_more</span>
+                    </div>
+                    <div class="relative w-full sm:w-48">
+                        <select id="status-filter"
+                            class="w-full pl-3 pr-8 py-2 bg-background-dark border border-neutral-700 rounded-lg text-sm text-slate-300 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+                            <option value="all">All Statuses</option>
+                            <option value="in_stock">In Stock</option>
+                            <option value="in_use">In Use</option>
+                            <option value="missing">Missing</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                        <span
+                            class="material-icons absolute right-2 top-2.5 text-slate-500 pointer-events-none text-lg">expand_more</span>
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex gap-3 w-full sm:w-auto justify-end">
+                    <button
+                        class="flex items-center gap-2 px-4 py-2 bg-background-dark border border-neutral-700 text-slate-300 rounded-lg text-sm font-medium hover:bg-neutral-800 hover:text-white transition-colors">
+                        <span class="material-icons text-sm">filter_list</span>
+                        More Filters
+                    </button>
+                    <button id="export-btn"
+                        class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg text-sm font-medium shadow-lg shadow-primary/25 transition-all">
+                        <span class="material-icons text-sm">download</span>
+                        Export Data
+                    </button>
+                </div>
+            </div>
+            <!-- Data Table -->
+            <div class="bg-surface-dark border border-neutral-700 rounded-b-xl overflow-hidden shadow-xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr
+                                class="bg-neutral-800/50 text-slate-400 text-xs uppercase tracking-wider font-semibold border-b border-neutral-700">
+                                <th class="px-6 py-4">Equipment Name</th>
+                                <th class="px-6 py-4">Unique ID</th>
+                                <th class="px-6 py-4">Category</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4">Quantity</th>
+                                <th class="px-6 py-4">Zone</th>
+                                <th class="px-6 py-4">Last Seen</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipment-tbody" class="divide-y divide-neutral-700 text-sm">
+                            <!-- Row 1: In Stock -->
+                            <tr class="hover:bg-neutral-800/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="h-10 w-10 rounded bg-neutral-700 flex-shrink-0 overflow-hidden relative">
+                                            <img alt="Radar Component" class="w-full h-full object-cover"
+                                                data-alt="Radar Component close up"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJbdrCx0izduedEL-liEgEd7xy9S1NOZxnQs2JeZErJR-MvGOFvCtppckTbazasf2MU-n1WszAWS__yHzoltRHvPanLceDrt-xruUwuQZ-CyWyqj3datz2ecAXD1tydY9rPP2WVywGox-nmLm0KuoAtYIXknY0DoCB8YhRYc6GCSfNV6R8FvnPRFt6HOmHILEx6Odxv2dO0CELhAAz3GpOHPLieBUd8osxjKAfL_bRxU8eBJOt5zHlEE5oLiLqS-BRUYlDnqLmySM" />
+                                        </div>
+                                        <span class="font-medium text-white">Radar Component XJ-9</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-mono text-slate-400">#RAD-001</td>
+                                <td class="px-6 py-4 text-slate-300">Surveillance</td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-success/10 text-success border border-success/20">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-success"></span>
+                                        In Stock
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button
+                                        class="flex items-center gap-2 text-primary hover:text-primary-light hover:underline group/cam">
+                                        <span
+                                            class="material-icons text-sm group-hover/cam:scale-110 transition-transform">videocam</span>
+                                        Warehouse B-04
+                                    </button>
+                                </td>
+                                <td class="px-6 py-4 text-slate-400">2 mins ago</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-slate-500 hover:text-white transition-colors"><span
+                                            class="material-icons">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 2: In Transit -->
+                            <tr class="hover:bg-neutral-800/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="h-10 w-10 rounded bg-neutral-700 flex-shrink-0 overflow-hidden relative">
+                                            <div
+                                                class="absolute inset-0 bg-neutral-600 flex items-center justify-center text-xs text-neutral-400">
+                                                Img</div>
+                                        </div>
+                                        <span class="font-medium text-white">Landing Gear Strut</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-mono text-slate-400">#LGS-442</td>
+                                <td class="px-6 py-4 text-slate-300">Mechanical</td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning border border-warning/20">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-warning animate-pulse"></span>
+                                        In Transit
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button
+                                        class="flex items-center gap-2 text-primary hover:text-primary-light hover:underline group/cam">
+                                        <span
+                                            class="material-icons text-sm group-hover/cam:scale-110 transition-transform">videocam</span>
+                                        Loading Bay A-01
+                                    </button>
+                                </td>
+                                <td class="px-6 py-4 text-slate-400">12 mins ago</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-slate-500 hover:text-white transition-colors"><span
+                                            class="material-icons">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 3: Missing -->
+                            <tr class="hover:bg-neutral-800/50 transition-colors group bg-danger/5">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="h-10 w-10 rounded bg-neutral-700 flex-shrink-0 overflow-hidden relative">
+                                            <img alt="Frequency Analyzer" class="w-full h-full object-cover"
+                                                data-alt="Electronic Frequency Analyzer device"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxWNXlOomSQLm0V8AFr_DdtuY31nygqI7cDVk-kYvftFQsBXEaWeWwr2GdLnU_P-wm-z8MD1Z4x_ZL80ABMODy1yakUb8fZNiv1EIgoTLYMLnJEPD37hc8QKpr0kLncMypbwYeEzcRm0995d2zo2XYFEaIBkGqnVHjqJLt5YayhL2ain-Aj9GJL1mW6jTnt6zTxnHbLtd4E0XzSKmHZJxF-n3GqyxtaqS1O84yl_YB6wKqey5_XCGrfkYnOZ3VjYJXzd5g8rjILeI" />
+                                        </div>
+                                        <span class="font-medium text-white">Frequency Analyzer</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-mono text-slate-400">#FRQ-102</td>
+                                <td class="px-6 py-4 text-slate-300">Avionics</td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-danger/10 text-danger border border-danger/20">
+                                        <span
+                                            class="h-1.5 w-1.5 rounded-full bg-danger animate-ping absolute opacity-75"></span>
+                                        <span class="h-1.5 w-1.5 rounded-full bg-danger relative"></span>
+                                        Missing
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button
+                                        class="flex items-center gap-2 text-danger hover:text-red-400 hover:underline group/cam">
+                                        <span
+                                            class="material-icons text-sm group-hover/cam:scale-110 transition-transform">videocam_off</span>
+                                        Exit Hall C-02
+                                    </button>
+                                </td>
+                                <td class="px-6 py-4 text-danger font-medium">45 mins ago</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-slate-500 hover:text-white transition-colors"><span
+                                            class="material-icons">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 4: In Use -->
+                            <tr class="hover:bg-neutral-800/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="h-10 w-10 rounded bg-neutral-700 flex-shrink-0 overflow-hidden relative">
+                                            <div
+                                                class="absolute inset-0 bg-neutral-600 flex items-center justify-center text-xs text-neutral-400">
+                                                Img</div>
+                                        </div>
+                                        <span class="font-medium text-white">Hydraulic Pump V2</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-mono text-slate-400">#HYD-221</td>
+                                <td class="px-6 py-4 text-slate-300">Mechanical</td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+                                        In Use
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button
+                                        class="flex items-center gap-2 text-primary hover:text-primary-light hover:underline group/cam">
+                                        <span
+                                            class="material-icons text-sm group-hover/cam:scale-110 transition-transform">videocam</span>
+                                        Hangar Main 01
+                                    </button>
+                                </td>
+                                <td class="px-6 py-4 text-slate-400">2 hrs ago</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-slate-500 hover:text-white transition-colors"><span
+                                            class="material-icons">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 5: In Stock -->
+                            <tr class="hover:bg-neutral-800/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="h-10 w-10 rounded bg-neutral-700 flex-shrink-0 overflow-hidden relative">
+                                            <img alt="Server Blade" class="w-full h-full object-cover"
+                                                data-alt="Computer server component"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrURcSeQCHuKDq5aSyaHsNNytP7FmaP3SQ5rql5_-aYTf9YsuEZy4iAZeucSOfXz3eFFOANGkG1CpItu-XKpfaumAB4fZZB33de-tLQp9koFgbXHA2AJ5ETAwWu5svqmd8PnlXUsMrclkiVPzhvF-tSNsvMfkOS5OheJPW5NMoNZX7mFr5XNNWCM7NSTUSOqjkV4MLmApNCFKattcfIzMGhczenwcylX8I5KEmKGbAgj6qpAKmUnuIvFUb0S2eTUArlf9GhkNTiJA" />
+                                        </div>
+                                        <span class="font-medium text-white">Server Blade Gen5</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-mono text-slate-400">#SRV-009</td>
+                                <td class="px-6 py-4 text-slate-300">IT Infrastructure</td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-success/10 text-success border border-success/20">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-success"></span>
+                                        In Stock
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button
+                                        class="flex items-center gap-2 text-primary hover:text-primary-light hover:underline group/cam">
+                                        <span
+                                            class="material-icons text-sm group-hover/cam:scale-110 transition-transform">videocam</span>
+                                        Server Room A
+                                    </button>
+                                </td>
+                                <td class="px-6 py-4 text-slate-400">5 mins ago</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-slate-500 hover:text-white transition-colors"><span
+                                            class="material-icons">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 6: Low Stock -->
+                            <tr class="hover:bg-neutral-800/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="h-10 w-10 rounded bg-neutral-700 flex-shrink-0 overflow-hidden relative">
+                                            <div
+                                                class="absolute inset-0 bg-neutral-600 flex items-center justify-center text-xs text-neutral-400">
+                                                Img</div>
+                                        </div>
+                                        <span class="font-medium text-white">Thermal Paste (Bulk)</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-mono text-slate-400">#CSM-551</td>
+                                <td class="px-6 py-4 text-slate-300">Consumables</td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning border border-warning/20">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-warning"></span>
+                                        Low Stock
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button
+                                        class="flex items-center gap-2 text-primary hover:text-primary-light hover:underline group/cam">
+                                        <span
+                                            class="material-icons text-sm group-hover/cam:scale-110 transition-transform">videocam</span>
+                                        Supply Closet 3
+                                    </button>
+                                </td>
+                                <td class="px-6 py-4 text-slate-400">1 day ago</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-slate-500 hover:text-white transition-colors"><span
+                                            class="material-icons">more_vert</span></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="px-6 py-4 bg-neutral-800/30 border-t border-neutral-700 flex items-center justify-between">
+                    <p id="pagination-info" class="text-sm text-slate-400">
+                        Showing <span class="font-medium text-white">1</span> to <span
+                            class="font-medium text-white">6</span> of <span class="font-medium text-white">1,420</span>
+                        results
+                    </p>
+                    <div id="pagination-buttons" class="flex gap-2">
+                        <button
+                            class="px-3 py-1 text-sm border border-neutral-700 rounded text-slate-400 hover:text-white hover:border-neutral-500 disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+                        <button
+                            class="px-3 py-1 text-sm border border-neutral-700 rounded text-slate-400 hover:text-white hover:border-neutral-500">1</button>
+                        <button
+                            class="px-3 py-1 text-sm bg-primary border border-primary rounded text-white font-medium">2</button>
+                        <button
+                            class="px-3 py-1 text-sm border border-neutral-700 rounded text-slate-400 hover:text-white hover:border-neutral-500">3</button>
+                        <span class="text-slate-500 flex items-end">...</span>
+                        <button
+                            class="px-3 py-1 text-sm border border-neutral-700 rounded text-slate-400 hover:text-white hover:border-neutral-500">10</button>
+                        <button
+                            class="px-3 py-1 text-sm border border-neutral-700 rounded text-slate-400 hover:text-white hover:border-neutral-500">Next</button>
+                    </div>
+                </div>
+            </div>
+    </main>
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <!-- Inventory Management JavaScript -->
+    <script src="/static/js/ux-utils.js"></script>
+    <script src="/static/js/notification-service.js"></script>
+    <script src="/static/js/inventory.js"></script>
+
+</body>
+
+</html>

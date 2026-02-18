@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Admin - ASECNA Stock IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --asecna-blue: #0A327D;
+            --asecna-light-blue: #2A5298;
+            --asecna-gold: #F0B429;
+            --bg-dark: #0F172A;
+            --card-dark: #1E293B;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #E2E8F0;
+        }
+
+        .font-outfit {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        .asecna-gradient {
+            background: linear-gradient(135deg, var(--asecna-blue), var(--asecna-light-blue));
+        }
+
+        .sidebar-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .sidebar-link.active {
+            background: var(--asecna-blue);
+            box-shadow: 0 4px 12px rgba(10, 50, 125, 0.3);
+        }
+
+        input[type="range"] {
+            accent-color: var(--asecna-gold);
+        }
+    </style>
+</head>
+
+<body class="overflow-hidden">
+    <!-- Main Layout -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 glass-panel m-4 flex flex-col shadow-2xl z-20">
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-10 h-10 asecna-gradient rounded-xl flex items-center justify-center shadow-lg">
+                    <i class="fas fa-boxes-stacked text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-outfit font-bold text-xl tracking-tight text-white">Stock<span
+                            class="text-yellow-500">IA</span></h1>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">ASECNA Dakar</p>
+                </div>
+            </div>
+
+            <nav class="flex-1 px-4 py-4 space-y-1">
+                <a href="monitoring.html"
+                    class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                    <i class="fas fa-chart-pie w-5"></i>
+                    <span class="font-medium">Tableau de bord</span>
+                </a>
+                <a href="inventory.html"
+                    class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400">
+                    <i class="fas fa-box w-5"></i>
+                    <span class="font-medium">Inventaire</span>
+                </a>
+                <a href="surveillance.html"
+                    class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400">
+                    <i class="fas fa-video w-5"></i>
+                    <span class="font-medium">Surveillance Live</span>
+                </a>
+                <a href="withdrawal.html"
+                    class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400">
+                    <i class="fas fa-truck-ramp-box w-5"></i>
+                    <span class="font-medium">Retraits Matériel</span>
+                </a>
+                <a href="analytics.html"
+                    class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400">
+                    <i class="fas fa-analytics w-5"></i>
+                    <span class="font-medium">Analyses & Rapports</span>
+                </a>
+                <div class="pt-4 pb-2 px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">IA & Système
+                </div>
+                <a href="validation.html"
+                    class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400">
+                    <i class="fas fa-check-double w-5"></i>
+                    <span class="font-medium">Validations IA</span>
+                </a>
+                <a href="config.html"
+                    class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white active">
+                    <i class="fas fa-cog w-5 text-yellow-500"></i>
+                    <span class="font-medium text-yellow-500">Configuration Admin</span>
+                </a>
+            </nav>
+
+            <div class="p-4 mt-auto">
+                <div class="glass-panel p-4 bg-slate-800/50 rounded-2xl flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-slate-300 font-bold border border-slate-600">
+                        AD
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-white">Administrateur</p>
+                        <p class="text-[10px] text-slate-400">Connecté</p>
+                    </div>
+                    <button class="ml-auto text-slate-500 hover:text-red-400 transition-colors">
+                        <i class="fas fa-power-off"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-8 relative">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-outfit font-bold text-white mb-1 tracking-tight">Configuration Système</h2>
+                    <p class="text-slate-400 flex items-center gap-2">
+                        <i class="fas fa-sliders-h text-yellow-500"></i>
+                        Gérez les seuils de détection temporelle et les paramètres ASECNA
+                    </p>
+                </div>
+            </div>
+
+            <!-- Configuration Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Core AI Settings -->
+                <div class="glass-panel p-8">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div
+                            class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                            <i class="fas fa-brain text-blue-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Paramètres IA Fondamentaux</h3>
+                            <p class="text-sm text-slate-400">Contrôlez l'intelligence du moteur de détection</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- Stability Duration -->
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-300">Durée de Stabilité Requise</label>
+                                <span id="stability-val"
+                                    class="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-bold">60 min</span>
+                            </div>
+                            <input type="range" id="stability-range" min="1" max="1440" value="60"
+                                class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            <p class="text-[11px] text-slate-500 italic">Temps minimum où un objet doit être présent
+                                avant de déclencher une demande de validation.</p>
+                        </div>
+
+                        <!-- Confidence Threshold -->
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-300">Seuil de Confiance Global</label>
+                                <span id="confidence-val"
+                                    class="px-3 py-1 bg-yellow-500 text-white rounded-lg text-xs font-bold">60%</span>
+                            </div>
+                            <input type="range" id="confidence-range" min="1" max="100" value="60"
+                                class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            <p class="text-[11px] text-slate-500 italic">Probabilité minimale requise pour qu'un objet
+                                soit pris en compte (réduit les faux positifs).</p>
+                        </div>
+
+                        <!-- Alert Delay -->
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-300">Délai d'Alerte
+                                    Administrateur</label>
+                                <span id="alert-val"
+                                    class="px-3 py-1 bg-red-500 text-white rounded-lg text-xs font-bold">3 heures</span>
+                            </div>
+                            <input type="range" id="alert-range" min="1" max="24" value="3"
+                                class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            <p class="text-[11px] text-slate-500 italic">Temps d'attente après détection stable avant
+                                l'envoi d'une alerte prioritaire.</p>
+                        </div>
+                    </div>
+
+                    <button id="save-ai-settings"
+                        class="w-full mt-10 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg active:scale-95">
+                        <i class="fas fa-save text-lg"></i>
+                        Appliquer les modifications IA
+                    </button>
+                </div>
+
+                <!-- ASECNA Organizational Settings -->
+                <div class="glass-panel p-8 flex flex-col">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div
+                            class="w-12 h-12 bg-yellow-500/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+                            <i class="fas fa-globe-africa text-yellow-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Pays Membres ASECNA</h3>
+                            <p class="text-sm text-slate-400">Gérez la liste des pays pour les retraits</p>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 space-y-4">
+                        <div class="flex gap-2">
+                            <input type="text" id="new-country" placeholder="Nouveau pays..."
+                                class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-500 transition-colors">
+                            <button id="add-country"
+                                class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition-all">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+
+                        <div id="countries-list"
+                            class="flex flex-wrap gap-2 max-h-[150px] overflow-y-auto pr-2 custom-scrollbar">
+                            <!-- Countries will be loaded here -->
+                        </div>
+                    </div>
+
+                    <button id="save-countries"
+                        class="w-full mt-6 py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-2xl font-bold flex items-center justify-center gap-3 transition-all">
+                        <i class="fas fa-sync text-lg"></i>
+                        Synchroniser les pays
+                    </button>
+                </div>
+
+                <!-- NEW: IP Camera Management -->
+                <div class="glass-panel p-8 lg:col-span-2">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div
+                            class="w-12 h-12 bg-green-500/10 rounded-2xl flex items-center justify-center border border-green-500/20">
+                            <i class="fas fa-video text-green-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Gestion des Caméras & Flux IP</h3>
+                            <p class="text-sm text-slate-400">Ajoutez des flux RTSP ou caméras IP pour surveiller de
+                                nouvelles zones</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Nom de la
+                                Zone</label>
+                            <input type="text" id="cam-zone-name" placeholder="ex: Zone A - Stock Informatique"
+                                class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Adresse IP /
+                                RTSP</label>
+                            <input type="text" id="cam-ip-address" placeholder="rtsp://admin:password@192.168.1.50:554"
+                                class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Type
+                                d'équipement</label>
+                            <select id="cam-equipment-type"
+                                class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors text-slate-300">
+                                <option value="">Chargement...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button id="add-camera-btn"
+                            class="flex-1 py-4 asecna-gradient text-white rounded-2xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg active:scale-95">
+                            <i class="fas fa-plus-circle text-lg"></i>
+                            Ajouter le Flux Caméra
+                        </button>
+                    </div>
+
+                    <!-- Active Cameras List -->
+                    <div class="mt-8 border-t border-slate-700 pt-8">
+                        <h4 class="text-sm font-bold text-slate-400 mb-4 uppercase tracking-widest">Caméras Actives</h4>
+                        <div id="active-cameras-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Will be populated by JS -->
+                            <div class="p-4 bg-slate-800/50 border border-slate-700 rounded-xl flex items-center gap-4">
+                                <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]">
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-xs font-bold text-white">Webcam Locale (Défaut)</p>
+                                    <p class="text-[10px] text-slate-500">Source: 0 (Pour tests IA)</p>
+                                </div>
+                                <i class="fas fa-lock text-slate-600 text-xs" title="Source système protégée"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Actions -->
+            <div class="mt-8 glass-panel p-8 border-red-500/20">
+                <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fas fa-triangle-exclamation text-red-400"></i>
+                    Zone de Danger
+                </h3>
+                <div class="flex flex-wrap gap-4">
+                    <button
+                        class="px-6 py-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 rounded-2xl font-bold flex items-center gap-3 transition-all">
+                        <i class="fas fa-trash-can"></i>
+                        Réinitialiser tous les trackings
+                    </button>
+                    <button
+                        class="px-6 py-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 rounded-2xl font-bold flex items-center gap-3 transition-all">
+                        <i class="fas fa-broom"></i>
+                        Vider l'historique des alertes
+                    </button>
+                    <button
+                        class="px-6 py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-2xl font-bold flex items-center gap-3 transition-all ml-auto">
+                        <i class="fas fa-download"></i>
+                        Exporter la Configuration (JSON)
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification"
+        class="fixed bottom-8 right-8 glass-panel p-4 px-6 border-l-4 border-l-green-500 translate-y-[200%] transition-all duration-500 z-50 flex items-center gap-4">
+        <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+            <i class="fas fa-check text-green-500"></i>
+        </div>
+        <div>
+            <p id="notif-title" class="font-bold text-white">Succès</p>
+            <p id="notif-message" class="text-sm text-slate-400">Configuration enregistrée.</p>
+        </div>
+    </div>
+
+    <script src="/static/js/ux-utils.js"></script>
+    <script src="/static/js/notification-service.js"></script>
+    <script src="/static/js/config.js"></script>
+</body>
+
+</html>

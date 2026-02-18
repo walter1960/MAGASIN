@@ -1,0 +1,16 @@
+venv/
+.venv/
+**/venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+.DS_Store
+yolov8n/
+.env
+*.log
+*.pt
+*.zip
+*.tar.gz
+magasin-ia-vision/yolo*.pt
+magasin-ia-vision/sam2*.pt

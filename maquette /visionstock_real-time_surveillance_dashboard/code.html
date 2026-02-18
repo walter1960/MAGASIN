@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VisionStock Real-time Surveillance Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-dark": "#1a2632", // Slightly lighter than bg-dark for panels
+                        "surface-border": "#2c3b49", // Border color for dark mode
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["Roboto Mono", "monospace"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Roboto+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101922; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2c3b49; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #137fec; 
+        }
+        
+        /* Bounding Box Animation Simulation */
+        @keyframes pulse-border {
+            0% { border-color: rgba(34, 197, 94, 0.5); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.2); }
+            50% { border-color: rgba(34, 197, 94, 1); box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1); }
+            100% { border-color: rgba(34, 197, 94, 0.5); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+        
+        .detection-box {
+            position: absolute;
+            border: 2px solid;
+            background-color: rgba(0,0,0,0.1);
+            pointer-events: none;
+        }
+
+        .detection-label {
+            position: absolute;
+            top: -24px;
+            left: -2px;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .grid-overlay {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-display h-screen flex overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-20 lg:w-64 flex-shrink-0 bg-white dark:bg-surface-dark border-r border-slate-200 dark:border-surface-border flex flex-col z-20 transition-all duration-300">
+<!-- Logo Area -->
+<div class="h-16 flex items-center justify-center lg:justify-start lg:px-6 border-b border-slate-200 dark:border-surface-border">
+<div class="w-8 h-8 rounded bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/20 flex-shrink-0">
+<span class="material-icons text-white text-lg">visibility</span>
+</div>
+<div class="hidden lg:block ml-3">
+<h1 class="font-bold text-lg tracking-tight text-slate-900 dark:text-white">VisionStock</h1>
+<p class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">ASECNA Surveillance</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 py-6 space-y-1 overflow-y-auto">
+<!-- Active Item -->
+<a class="flex items-center px-4 lg:px-6 py-3 border-l-4 border-primary bg-primary/10 text-primary" href="#">
+<span class="material-icons">grid_view</span>
+<span class="hidden lg:block ml-3 font-medium">Surveillance</span>
+</a>
+<!-- Inactive Items -->
+<a class="flex items-center px-4 lg:px-6 py-3 border-l-4 border-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors group" href="#">
+<span class="material-icons group-hover:text-primary transition-colors">inventory_2</span>
+<span class="hidden lg:block ml-3 font-medium">Inventory</span>
+</a>
+<a class="flex items-center px-4 lg:px-6 py-3 border-l-4 border-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors group" href="#">
+<span class="material-icons group-hover:text-primary transition-colors">analytics</span>
+<span class="hidden lg:block ml-3 font-medium">Analytics</span>
+</a>
+<a class="flex items-center px-4 lg:px-6 py-3 border-l-4 border-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors group" href="#">
+<span class="material-icons group-hover:text-primary transition-colors">history</span>
+<span class="hidden lg:block ml-3 font-medium">Logs</span>
+</a>
+<div class="pt-4 mt-4 border-t border-slate-200 dark:border-surface-border">
+<a class="flex items-center px-4 lg:px-6 py-3 border-l-4 border-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors group" href="#">
+<span class="material-icons group-hover:text-primary transition-colors">settings</span>
+<span class="hidden lg:block ml-3 font-medium">Settings</span>
+</a>
+</div>
+</nav>
+<!-- User Profile -->
+<div class="p-4 border-t border-slate-200 dark:border-surface-border">
+<div class="flex items-center gap-3">
+<img class="h-10 w-10 rounded-full object-cover border-2 border-slate-200 dark:border-surface-border" data-alt="Profile picture of security operator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6hNFsY_v1e9_tInsU-sJF6ataChyXoSCU6ALwo22e0gG6urwVfYEYZVbxsa7ZfRnv2496B4y8-PqNyhJ9GbuwiqRHdpe8Kcdh32LLwuEEfjvZckhb9lzFKHVqimc-ElOx_cN-Cotb6vRJdxhCab3s9FXnfsO5-RrIW0KrZ2LMCQdCg0lcE3cUhUF0EfhYKLMArHhETyFaOCJ4MjrMtztWhFCrZqWwUBNFW7-dw7htuYETIs8mO-yjMEoYbcOmtLbzG8N6ue-_qcA"/>
+<div class="hidden lg:block overflow-hidden">
+<p class="text-sm font-medium text-slate-900 dark:text-white truncate">J. Doe</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate">Shift Supervisor</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Top Header -->
+<header class="h-16 flex items-center justify-between px-6 bg-white dark:bg-surface-dark/50 border-b border-slate-200 dark:border-surface-border backdrop-blur-md sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<h2 class="text-xl font-semibold text-slate-800 dark:text-white">Live Monitoring</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-red-500/10 text-red-500 text-xs font-bold border border-red-500/20 flex items-center gap-1.5 animate-pulse">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                    LIVE
+                </span>
+</div>
+<div class="flex items-center gap-6">
+<!-- System Status -->
+<div class="hidden md:flex items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
+<div class="flex items-center gap-2">
+<span class="material-icons text-green-500 text-base">check_circle</span>
+<span>AI Engine: <span class="text-slate-700 dark:text-slate-200 font-mono">ONLINE</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-icons text-primary text-base">dns</span>
+<span>Server Load: <span class="text-slate-700 dark:text-slate-200 font-mono">12%</span></span>
+</div>
+<div class="h-4 w-px bg-slate-200 dark:bg-surface-border"></div>
+<div class="font-mono text-slate-900 dark:text-white" id="clock">14:42:05 UTC</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">fullscreen</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Dashboard Content Grid -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Video Grid Area -->
+<div class="flex-1 p-4 lg:p-6 overflow-y-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
+<!-- Camera Feed 1 -->
+<div class="relative group bg-black rounded-lg overflow-hidden border border-slate-200 dark:border-surface-border shadow-lg flex flex-col">
+<div class="absolute top-0 left-0 w-full p-3 flex justify-between items-start z-10 bg-gradient-to-b from-black/80 to-transparent">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-white bg-black/50 px-1.5 py-0.5 rounded border border-white/20">CAM-01</span>
+<span class="text-sm font-medium text-white shadow-sm">Zone A - Storage Rack</span>
+</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
+</div>
+<!-- Video Placeholder -->
+<div class="relative flex-1 bg-slate-800 w-full h-full">
+<img class="absolute w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" data-alt="Workshop storage rack with tools" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJSiJOAfitnJwXhrzfws_dhkd82uSl7GbrJkSfLxyMy-MBxZ5JXDTCZs14ClcvNyvf6OEv6-s6yOT1SKnmhewv5nJhczYuD107jycTCRWAfVRSkoGChtoHp00OhfnM2_sXnI45xWRqHccul79-J9O2XDp1wb4v-h_-GHXGCRJF2VOHp7VL-36SJifyUCs0BBYTq5yLBW6uemoe5coFksob4gT1RrwZ4dh4L2bFM4L0iRJnBYHwa2VQRwX_Np40ieQHXCtrQXiQw04"/>
+<!-- YOLO Bounding Box 1 (Green - Safe) -->
+<div class="detection-box border-green-500" style="top: 30%; left: 20%; width: 15%; height: 25%;">
+<div class="detection-label bg-green-600">Drill Kit (98%)</div>
+</div>
+<!-- YOLO Bounding Box 2 (Green - Safe) -->
+<div class="detection-box border-green-500" style="top: 45%; left: 60%; width: 10%; height: 15%;">
+<div class="detection-label bg-green-600">Wrench Set (94%)</div>
+</div>
+<!-- Grid Overlay effect -->
+<div class="absolute inset-0 grid-overlay pointer-events-none opacity-30"></div>
+</div>
+<!-- Quick Actions Footer -->
+<div class="absolute bottom-0 w-full p-2 bg-black/60 backdrop-blur-sm transform translate-y-full group-hover:translate-y-0 transition-transform duration-200 flex justify-end gap-2">
+<button class="p-1.5 rounded hover:bg-white/20 text-white"><span class="material-icons text-sm">zoom_in</span></button>
+<button class="p-1.5 rounded hover:bg-white/20 text-white"><span class="material-icons text-sm">photo_camera</span></button>
+<button class="p-1.5 rounded hover:bg-white/20 text-white"><span class="material-icons text-sm">more_vert</span></button>
+</div>
+</div>
+<!-- Camera Feed 2 -->
+<div class="relative group bg-black rounded-lg overflow-hidden border border-slate-200 dark:border-surface-border shadow-lg flex flex-col">
+<div class="absolute top-0 left-0 w-full p-3 flex justify-between items-start z-10 bg-gradient-to-b from-black/80 to-transparent">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-white bg-black/50 px-1.5 py-0.5 rounded border border-white/20">CAM-02</span>
+<span class="text-sm font-medium text-white shadow-sm">Zone B - Workbench</span>
+</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
+</div>
+<div class="relative flex-1 bg-slate-800 w-full h-full">
+<img class="absolute w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" data-alt="Technician working at a workbench with electronics" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMLc5oK3HY47sJpRy6B6YOWcbINK7uWg7lKicyfW5nJ0GB3OWppXzxAqtMRs3Mkg4zdjE4PGmyHnm1qmN7PViyAI5ybftmT_LxISX7A54nYIqq_XQgMLzwsSdrVSLqz6Gtpn4oOMfesJsmeD3RkynLofrRCh0v0Mtmcq4dVfGnra8RTmPWu87Sr3SVOabIBaOhKN6rS3h-sUrmFQ2ycYiMk-SHEDoabMEJc2EsKMmCgVeXb0AGHAnnaN0tmRXPQOzjcL9Bohpy9f0"/>
+<!-- YOLO Bounding Box 3 (Yellow - In Use) -->
+<div class="detection-box border-yellow-500" style="top: 50%; left: 40%; width: 20%; height: 30%;">
+<div class="detection-label bg-yellow-600">Operator #42</div>
+</div>
+<!-- YOLO Bounding Box 4 (Red - Alert) -->
+<div class="detection-box border-red-500 animate-[pulse-border_2s_infinite]" style="top: 65%; left: 70%; width: 8%; height: 8%;">
+<div class="detection-label bg-red-600">Unauth. Tool</div>
+</div>
+<div class="absolute inset-0 grid-overlay pointer-events-none opacity-30"></div>
+</div>
+</div>
+<!-- Camera Feed 3 -->
+<div class="relative group bg-black rounded-lg overflow-hidden border border-slate-200 dark:border-surface-border shadow-lg flex flex-col">
+<div class="absolute top-0 left-0 w-full p-3 flex justify-between items-start z-10 bg-gradient-to-b from-black/80 to-transparent">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-white bg-black/50 px-1.5 py-0.5 rounded border border-white/20">CAM-03</span>
+<span class="text-sm font-medium text-white shadow-sm">Zone C - Entry/Exit</span>
+</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
+</div>
+<div class="relative flex-1 bg-slate-800 w-full h-full">
+<img class="absolute w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" data-alt="Industrial hallway entrance with security gate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyy39nNfQvLoKHDzhUvbil2JID6l0mlIedjo6OP8Ec_QwRL9UmD9-W0YLPUV5Qt0x4x30to2bK44f8Ln8QCCrHwN0zWH4RpQaBenjZuw98Ldeg_1QVxsrYKNp4JQNg5qKuk_OYeuZJOIPzzFvF6Mo5_zxhO8pzGE1o2we2tpa2597-Ane_MZvU6LCTxtu4Y1f_nPKh8Q1CeyRL6suaLO60Mbfg1ENkHRL_iINgqAhLuSRrx32K9FYyIWw7IlFP4-aB9sGrP-TspB4"/>
+<div class="absolute inset-0 grid-overlay pointer-events-none opacity-30"></div>
+</div>
+<!-- No active detections -->
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/30 text-sm font-mono pointer-events-none">NO ACTIVITY</div>
+</div>
+<!-- Camera Feed 4 -->
+<div class="relative group bg-black rounded-lg overflow-hidden border border-slate-200 dark:border-surface-border shadow-lg flex flex-col">
+<div class="absolute top-0 left-0 w-full p-3 flex justify-between items-start z-10 bg-gradient-to-b from-black/80 to-transparent">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-white bg-black/50 px-1.5 py-0.5 rounded border border-white/20">CAM-04</span>
+<span class="text-sm font-medium text-white shadow-sm">Zone D - High Value Cage</span>
+</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
+</div>
+<div class="relative flex-1 bg-slate-800 w-full h-full grayscale">
+<img class="absolute w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500" data-alt="Secure metal cage storage area dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZeljv1Jy9qLgfKC0IVEC4gK7LpcROeHu1soMTOFr5RpHZN1QKQssNU-z4VtgqTVXIItTw49HhHSmLIkai6EsFBPT2Vyh18qijdURwRqJvY0VaMmFOgmCuHKwF2TOHpGgwUEXpl2Cfz6mpn56TTbeiiERs3iU1i5wN-asI54V8E3YxQ-gCnudWsQCNuiRrQ-N_-npr5narRYtJErkxP3diGDez14Bhes11e4lQJ_3PsHsMHu6-7FVSznsuykMezd83mRcdZXis1fI"/>
+<!-- Offline/Issue Overlay -->
+<div class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+<div class="text-center">
+<span class="material-icons text-red-500 text-4xl mb-2">signal_wifi_off</span>
+<p class="text-red-400 font-mono font-bold tracking-widest">CONNECTION UNSTABLE</p>
+</div>
+</div>
+<div class="absolute inset-0 grid-overlay pointer-events-none opacity-30"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Panel: Live Event Log -->
+<aside class="w-80 bg-white dark:bg-surface-dark border-l border-slate-200 dark:border-surface-border flex flex-col z-10 shadow-xl lg:shadow-none hidden lg:flex">
+<div class="p-4 border-b border-slate-200 dark:border-surface-border flex justify-between items-center bg-background-light dark:bg-surface-dark">
+<h3 class="font-bold text-slate-800 dark:text-slate-200 text-sm tracking-wide uppercase flex items-center gap-2">
+<span class="material-icons text-primary text-sm">list_alt</span>
+                        Event Log
+                    </h3>
+<button class="text-xs font-medium text-primary hover:text-blue-400 transition-colors">Export CSV</button>
+</div>
+<!-- Filters -->
+<div class="p-3 border-b border-slate-200 dark:border-surface-border flex gap-2 overflow-x-auto no-scrollbar">
+<button class="px-3 py-1 text-xs rounded-full bg-primary text-white font-medium whitespace-nowrap shadow-sm shadow-primary/30">All</button>
+<button class="px-3 py-1 text-xs rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors whitespace-nowrap">Alerts</button>
+<button class="px-3 py-1 text-xs rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors whitespace-nowrap">Movement</button>
+</div>
+<!-- Log List -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- Alert Item -->
+<div class="relative pl-4 border-l-2 border-red-500 py-1 group hover:bg-slate-50 dark:hover:bg-white/5 -mx-2 px-2 rounded-r transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-mono text-slate-400">10:41:15 AM</span>
+<span class="text-[10px] font-bold text-red-500 bg-red-500/10 px-1.5 rounded uppercase tracking-wider">Anomaly</span>
+</div>
+<p class="text-sm font-medium text-slate-800 dark:text-slate-200">Unauthorized Tool Detected</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Zone B: Unidentified item on bench.</p>
+</div>
+<!-- Info Item -->
+<div class="relative pl-4 border-l-2 border-primary py-1 group hover:bg-slate-50 dark:hover:bg-white/5 -mx-2 px-2 rounded-r transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-mono text-slate-400">10:40:00 AM</span>
+<span class="text-[10px] font-bold text-primary bg-primary/10 px-1.5 rounded uppercase tracking-wider">Info</span>
+</div>
+<p class="text-sm font-medium text-slate-800 dark:text-slate-200">Inventory Check Complete</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Automated cycle finished successfully.</p>
+</div>
+<!-- Warning Item -->
+<div class="relative pl-4 border-l-2 border-yellow-500 py-1 group hover:bg-slate-50 dark:hover:bg-white/5 -mx-2 px-2 rounded-r transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-mono text-slate-400">10:38:22 AM</span>
+<span class="text-[10px] font-bold text-yellow-500 bg-yellow-500/10 px-1.5 rounded uppercase tracking-wider">Removal</span>
+</div>
+<p class="text-sm font-medium text-slate-800 dark:text-slate-200">Drill #402 Removed</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Operator #42 in Zone A.</p>
+</div>
+<!-- Standard Item -->
+<div class="relative pl-4 border-l-2 border-slate-300 dark:border-slate-600 py-1 group hover:bg-slate-50 dark:hover:bg-white/5 -mx-2 px-2 rounded-r transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-mono text-slate-400">10:35:10 AM</span>
+<span class="text-[10px] font-bold text-slate-500 bg-slate-200 dark:bg-slate-700 px-1.5 rounded uppercase tracking-wider">System</span>
+</div>
+<p class="text-sm font-medium text-slate-800 dark:text-slate-200">Camera 04 Connection Lost</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Attempting auto-reconnect...</p>
+</div>
+<!-- Info Item -->
+<div class="relative pl-4 border-l-2 border-green-500 py-1 group hover:bg-slate-50 dark:hover:bg-white/5 -mx-2 px-2 rounded-r transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-mono text-slate-400">10:32:05 AM</span>
+<span class="text-[10px] font-bold text-green-500 bg-green-500/10 px-1.5 rounded uppercase tracking-wider">Return</span>
+</div>
+<p class="text-sm font-medium text-slate-800 dark:text-slate-200">Wrench Set #A Returned</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Zone B storage updated.</p>
+</div>
+<!-- Faded older items -->
+<div class="opacity-50">
+<div class="relative pl-4 border-l-2 border-slate-300 dark:border-slate-600 py-1 group -mx-2 px-2">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-mono text-slate-400">10:15:00 AM</span>
+<span class="text-[10px] font-bold text-slate-500 bg-slate-200 dark:bg-slate-700 px-1.5 rounded uppercase tracking-wider">Login</span>
+</div>
+<p class="text-sm font-medium text-slate-800 dark:text-slate-200">Supervisor J. Doe Logged In</p>
+</div>
+</div>
+</div>
+<!-- Panel Footer -->
+<div class="p-3 border-t border-slate-200 dark:border-surface-border bg-slate-50 dark:bg-surface-dark">
+<div class="flex items-center justify-between text-xs text-slate-500">
+<span>Status: <span class="text-green-500 font-semibold">Monitoring</span></span>
+<span>v2.4.1</span>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<script>
+        // Simple clock script for realism
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-GB', { hour12: false });
+            document.getElementById('clock').textContent = timeString + ' UTC';
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body></html>
